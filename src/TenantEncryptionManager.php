@@ -129,7 +129,7 @@ class TenantEncryptionManager
 
             $sourceContents = File::get($sourcePath);
 
-            if (! is_string($sourceContents) || $sourceContents === '') {
+            if ($sourceContents === '') {
                 return false;
             }
 
@@ -193,6 +193,47 @@ class TenantEncryptionManager
         );
     }
 
+    /**
+     * Create an Encrypter for a raw key (not from the key provider).
+     * Useful during key rotation when you have both old and new keys in memory.
+     */
+    public function encrypterForRawKey(string $rawKey): Encrypter
+    {
+        return new Encrypter($rawKey, 'AES-256-CBC');
+    }
+
+    /**
+     * Create a FileEncrypter for a raw key (not from the key provider).
+     * Uses the configured chunk size from the manager.
+     */
+    public function fileEncrypterForRawKey(string $rawKey): FileEncrypter
+    {
+        return new FileEncrypter(
+            key: $rawKey,
+            chunkSize: $this->chunkSize,
+        );
+    }
+
+    /**
+     * Execute a callback with a decrypted temporary file path.
+     * The temp file is automatically cleaned up after the callback completes.
+     *
+     * @template T
+     *
+     * @param  callable(string): T  $callback  Receives the absolute temp path
+     * @return T
+     */
+    public function usingDecryptedTempPath(int|string $tenantId, string $path, callable $callback, ?string $disk = null): mixed
+    {
+        $tempPath = $this->decryptToTempPath($tenantId, $path, $disk);
+
+        try {
+            return $callback($tempPath);
+        } finally {
+            $this->deleteTempFile($tempPath);
+        }
+    }
+
     public function isChunkEncryptedPayload(string $contents): bool
     {
         return Str::startsWith($contents, FileEncrypter::MAGIC);
@@ -218,7 +259,10 @@ class TenantEncryptionManager
 
     protected function disk(?string $disk = null): Filesystem
     {
-        return $this->filesystem->disk($disk ?? config('vault-cipher.default_disk', 'local'));
+        $defaultDisk = config('vault-cipher.default_disk', 'local');
+        $diskName = $disk ?? (is_string($defaultDisk) ? $defaultDisk : 'local');
+
+        return $this->filesystem->disk($diskName);
     }
 
     protected function createTempFile(string $prefix): string

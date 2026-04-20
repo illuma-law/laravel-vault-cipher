@@ -14,6 +14,8 @@ use RuntimeException;
  * Class TenantEncryptedArray
  *
  * Eloquent cast for tenant-aware array encryption (stored as JSON).
+ *
+ * @implements CastsAttributes<mixed, mixed>
  */
 class TenantEncryptedArray implements CastsAttributes
 {
@@ -72,12 +74,10 @@ class TenantEncryptedArray implements CastsAttributes
             return $model->getTenantIdForCipher();
         }
 
-        if (isset($model->team_id)) {
-            return (int) $model->team_id;
-        }
-
         if (isset($model->tenant_id)) {
-            return $model->tenant_id;
+            $tenantId = $model->tenant_id;
+
+            return is_string($tenantId) || is_int($tenantId) ? $tenantId : null;
         }
 
         throw new RuntimeException(sprintf(

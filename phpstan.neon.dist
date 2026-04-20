@@ -1,9 +1,3 @@
-includes:
-    - phpstan-baseline.neon
-    - vendor/larastan/larastan/extension.neon
-    - vendor/phpstan/phpstan-deprecation-rules/rules.neon
-    - vendor/phpstan/phpstan-phpunit/extension.neon
-
 parameters:
     level: max
     paths:
@@ -12,4 +6,3 @@ parameters:
     tmpDir: build/phpstan
     checkOctaneCompatibility: true
     checkModelProperties: true
-    reportUnmatchedIgnoredErrors: false

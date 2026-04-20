@@ -19,7 +19,9 @@ beforeEach(function () {
         }
     };
 
-    $this->app->instance(TenantKeyProvider::class, $this->keyProvider);
+    /** @var \Illuminate\Foundation\Application $app */
+    $app = $this->app;
+    $app->instance(TenantKeyProvider::class, $this->keyProvider);
 });
 
 it('encrypts and decrypts strings per tenant', function () {

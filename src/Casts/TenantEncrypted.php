@@ -14,6 +14,8 @@ use RuntimeException;
  * Class TenantEncrypted
  *
  * Eloquent cast for tenant-aware string encryption.
+ *
+ * @implements CastsAttributes<mixed, mixed>
  */
 class TenantEncrypted implements CastsAttributes
 {
@@ -43,7 +45,7 @@ class TenantEncrypted implements CastsAttributes
         }
 
         if (! is_string($value)) {
-            $value = (string) $value;
+            $value = is_scalar($value) ? (string) $value : '';
         }
 
         $tenantId = $this->resolveTenantId($model);
@@ -68,12 +70,10 @@ class TenantEncrypted implements CastsAttributes
             return $model->getTenantIdForCipher();
         }
 
-        if (isset($model->team_id)) {
-            return (int) $model->team_id;
-        }
-
         if (isset($model->tenant_id)) {
-            return $model->tenant_id;
+            $tenantId = $model->tenant_id;
+
+            return is_string($tenantId) || is_int($tenantId) ? $tenantId : null;
         }
 
         throw new RuntimeException(sprintf(

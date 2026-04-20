@@ -30,16 +30,18 @@ class VaultCipherServiceProvider extends PackageServiceProvider
             /** @var \Illuminate\Filesystem\FilesystemManager $filesystem */
             $filesystem = $app->make('filesystem');
 
+            $chunkSize = config('vault-cipher.chunk_size', 65536);
+
             return new TenantEncryptionManager(
                 $keyProvider,
                 $filesystem,
-                (int) config('vault-cipher.chunk_size', 65536)
+                is_numeric($chunkSize) ? (int) $chunkSize : 65536
             );
         });
 
         $provider = config('vault-cipher.key_provider');
 
-        if ($provider) {
+        if (is_string($provider) || $provider instanceof \Closure) {
             $this->app->bind(TenantKeyProvider::class, $provider);
         }
     }
