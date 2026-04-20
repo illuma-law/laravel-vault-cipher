@@ -25,13 +25,19 @@ class VaultCipherServiceProvider extends PackageServiceProvider
     public function packageRegistered(): void
     {
         $this->app->singleton(TenantEncryptionManager::class, function ($app) {
+            $keyProvider = $app->make(TenantKeyProvider::class);
+
             return new TenantEncryptionManager(
-                $app->make(TenantKeyProvider::class),
+                $keyProvider,
                 $app->make('filesystem'),
                 config('vault-cipher.chunk_size', 65536)
             );
         });
 
-        $this->app->bind(TenantKeyProvider::class, config('vault-cipher.key_provider'));
+        $provider = config('vault-cipher.key_provider');
+
+        if ($provider) {
+            $this->app->bind(TenantKeyProvider::class, $provider);
+        }
     }
 }

@@ -1,12 +1,15 @@
+includes:
+    - phpstan-baseline.neon
+    - vendor/larastan/larastan/extension.neon
+    - vendor/phpstan/phpstan-deprecation-rules/rules.neon
+    - vendor/phpstan/phpstan-phpunit/extension.neon
+
 parameters:
-    level: 9
+    level: max
     paths:
         - src
         - tests
     tmpDir: build/phpstan
     checkOctaneCompatibility: true
     checkModelProperties: true
-    ignoreErrors:
-        -
-            identifier: method.notFound
-            path: tests/ArchTest.php
+    reportUnmatchedIgnoredErrors: false

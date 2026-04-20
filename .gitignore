@@ -1,0 +1,29 @@
+/build
+composer.lock
+/vendor
+/node_modules
+npm-debug.log
+yarn-error.log
+
+# Testing
+.phpunit.cache
+phpunit.xml
+
+# IDE
+_ide_helper.php
+_ide_helper_models.php
+.phpstorm.meta.php
+/.idea
+/.fleet
+/.vscode
+
+# Static Analysis
+phpstan.neon
+testbench.yaml
+
+# Documentation
+/docs
+/coverage
+clover.xml
+.DS_Store
+.php-cs-fixer.cache

@@ -6,6 +6,18 @@
 
 Tenant-aware streaming encryption for Laravel. This package allows you to encrypt strings and files using tenant-specific keys, with support for streaming large files to avoid memory exhaustion.
 
+## TL;DR
+
+```php
+use IllumaLaw\VaultCipher\Facades\TenantEncryptionManager;
+
+// Encrypt string for a specific tenant
+$encrypted = TenantEncryptionManager::encryptString($tenantId, 'sensitive data');
+
+// Store and encrypt file via streaming
+TenantEncryptionManager::store($tenantId, 'path/to/file.txt', $content);
+```
+
 ## Installation
 
 You can install the package via composer:
@@ -116,9 +128,9 @@ If you discover any security-related issues, please email security@illuma.law in
 
 ## Credits
 
-- [Menes](https://github.com/menes)
+- [illuma-law](https://github.com/illuma-law)
 - [All Contributors](../../contributors)
 
 ## License
 
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+The MIT License (MIT). Please see [License File](LICENSE) for more information.
