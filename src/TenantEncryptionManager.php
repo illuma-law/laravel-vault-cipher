@@ -167,6 +167,7 @@ class TenantEncryptionManager
 
                 try {
                     $this->fileEncrypterForTenant($tenantId)->decryptedStream($encryptedPath, function (string $chunk) use ($outputHandle): void {
+                        assert(is_resource($outputHandle));
                         fwrite($outputHandle, $chunk);
                     });
                 } finally {
@@ -206,6 +207,7 @@ class TenantEncryptionManager
         }
 
         try {
+            /** @var string $magic */
             $magic = fread($handle, strlen(FileEncrypter::MAGIC));
         } finally {
             fclose($handle);
@@ -242,15 +244,21 @@ class TenantEncryptionManager
         $tempHandle = fopen($tempPath, 'wb');
 
         if ($tempHandle === false) {
-            fclose($stream);
+            if (is_resource($stream)) {
+                fclose($stream);
+            }
             throw new RuntimeException('Unable to open temporary file for writing.');
         }
 
         try {
             stream_copy_to_stream($stream, $tempHandle);
         } finally {
-            fclose($stream);
-            fclose($tempHandle);
+            if (is_resource($stream)) {
+                fclose($stream);
+            }
+            if (is_resource($tempHandle)) {
+                fclose($tempHandle);
+            }
         }
 
         return $tempPath;
@@ -267,7 +275,9 @@ class TenantEncryptionManager
         try {
             $this->disk($disk)->put($path, $stream);
         } finally {
-            fclose($stream);
+            if (is_resource($stream)) {
+                fclose($stream);
+            }
         }
     }
 

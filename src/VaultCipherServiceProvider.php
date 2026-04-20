@@ -24,13 +24,16 @@ class VaultCipherServiceProvider extends PackageServiceProvider
 
     public function packageRegistered(): void
     {
-        $this->app->singleton(TenantEncryptionManager::class, function ($app) {
+        $this->app->singleton(TenantEncryptionManager::class, function (\Illuminate\Foundation\Application $app): TenantEncryptionManager {
             $keyProvider = $app->make(TenantKeyProvider::class);
+
+            /** @var \Illuminate\Filesystem\FilesystemManager $filesystem */
+            $filesystem = $app->make('filesystem');
 
             return new TenantEncryptionManager(
                 $keyProvider,
-                $app->make('filesystem'),
-                config('vault-cipher.chunk_size', 65536)
+                $filesystem,
+                (int) config('vault-cipher.chunk_size', 65536)
             );
         });
 
