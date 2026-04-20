@@ -1,0 +1,12 @@
+parameters:
+    level: 9
+    paths:
+        - src
+        - tests
+    tmpDir: build/phpstan
+    checkOctaneCompatibility: true
+    checkModelProperties: true
+    ignoreErrors:
+        -
+            identifier: method.notFound
+            path: tests/ArchTest.php
