@@ -121,6 +121,6 @@ class TestModel extends Model implements TenantCipherable
 
     protected $casts = [
         'secret' => TenantEncrypted::class,
-        'data'   => TenantEncryptedArray::class,
+        'data' => TenantEncryptedArray::class,
     ];
 }
