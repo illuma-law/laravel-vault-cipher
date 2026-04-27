@@ -7,8 +7,8 @@ namespace IllumaLaw\VaultCipher\Tests;
 use IllumaLaw\VaultCipher\Contracts\TenantKeyProvider;
 use IllumaLaw\VaultCipher\Facades\TenantEncryptionManager;
 use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Storage;
-use RuntimeException;
 
 beforeEach(function () {
     $this->keyProvider = new class implements TenantKeyProvider
@@ -19,7 +19,7 @@ beforeEach(function () {
         }
     };
 
-    /** @var \Illuminate\Foundation\Application $app */
+    /** @var Application $app */
     $app = $this->app;
     $app->instance(TenantKeyProvider::class, $this->keyProvider);
 });
@@ -110,7 +110,6 @@ it('forgets tenant encrypters', function () {
     $tenantId = 1;
     TenantEncryptionManager::encryptString($tenantId, 'test');
 
-    // Access protected property via reflection to verify
     $manager = app(\IllumaLaw\VaultCipher\TenantEncryptionManager::class);
     $reflection = new \ReflectionClass($manager);
     $property = $reflection->getProperty('encrypters');
@@ -155,7 +154,4 @@ it('returns false when encrypting empty file', function () {
 
 it('throws exception if unable to read stream from disk', function () {
     Storage::fake('local');
-    // We can't easily mock readStream to return false with Storage::fake without more complex mocking.
-    // But we can try to pass a non-existent path and see if it throws?
-    // Actually copyDiskFileToTempPath calls readStream which might return null/false for missing files.
 })->skip('Hard to mock readStream failure with Storage::fake');

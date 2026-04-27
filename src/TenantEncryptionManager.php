@@ -14,11 +14,6 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use RuntimeException;
 
-/**
- * Class TenantEncryptionManager
- *
- * Manages tenant-aware streaming encryption and decryption.
- */
 class TenantEncryptionManager
 {
     /**
@@ -193,19 +188,11 @@ class TenantEncryptionManager
         );
     }
 
-    /**
-     * Create an Encrypter for a raw key (not from the key provider).
-     * Useful during key rotation when you have both old and new keys in memory.
-     */
     public function encrypterForRawKey(string $rawKey): Encrypter
     {
         return new Encrypter($rawKey, 'AES-256-CBC');
     }
 
-    /**
-     * Create a FileEncrypter for a raw key (not from the key provider).
-     * Uses the configured chunk size from the manager.
-     */
     public function fileEncrypterForRawKey(string $rawKey): FileEncrypter
     {
         return new FileEncrypter(
@@ -215,9 +202,6 @@ class TenantEncryptionManager
     }
 
     /**
-     * Execute a callback with a decrypted temporary file path.
-     * The temp file is automatically cleaned up after the callback completes.
-     *
      * @template T
      *
      * @param  callable(string): T  $callback  Receives the absolute temp path

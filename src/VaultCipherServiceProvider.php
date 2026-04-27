@@ -5,14 +5,11 @@ declare(strict_types=1);
 namespace IllumaLaw\VaultCipher;
 
 use IllumaLaw\VaultCipher\Contracts\TenantKeyProvider;
+use Illuminate\Filesystem\FilesystemManager;
+use Illuminate\Foundation\Application;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
-/**
- * Class VaultCipherServiceProvider
- *
- * Service provider for the Vault Cipher package.
- */
 class VaultCipherServiceProvider extends PackageServiceProvider
 {
     public function configurePackage(Package $package): void
@@ -24,10 +21,10 @@ class VaultCipherServiceProvider extends PackageServiceProvider
 
     public function packageRegistered(): void
     {
-        $this->app->singleton(TenantEncryptionManager::class, function (\Illuminate\Foundation\Application $app): TenantEncryptionManager {
+        $this->app->singleton(TenantEncryptionManager::class, function (Application $app): TenantEncryptionManager {
             $keyProvider = $app->make(TenantKeyProvider::class);
 
-            /** @var \Illuminate\Filesystem\FilesystemManager $filesystem */
+            /** @var FilesystemManager $filesystem */
             $filesystem = $app->make('filesystem');
 
             $chunkSize = config('vault-cipher.chunk_size', 65536);

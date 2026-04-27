@@ -10,6 +10,7 @@ use IllumaLaw\VaultCipher\Contracts\TenantCipherable;
 use IllumaLaw\VaultCipher\Contracts\TenantKeyProvider;
 use IllumaLaw\VaultCipher\Facades\TenantEncryptionManager;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Application;
 use RuntimeException;
 
 beforeEach(function () {
@@ -21,7 +22,7 @@ beforeEach(function () {
         }
     };
 
-    /** @var \Illuminate\Foundation\Application $app */
+    /** @var Application $app */
     $app = $this->app;
     $app->instance(TenantKeyProvider::class, $keyProvider);
 });
@@ -102,7 +103,6 @@ it('handles non-string values in TenantEncrypted set', function () {
 });
 
 it('returns plain value if no tenant id can be resolved (though it should throw)', function () {
-    // This is hard to trigger because resolveTenantId throws.
     expect(true)->toBe(true);
 })->skip();
 

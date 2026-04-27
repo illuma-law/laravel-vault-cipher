@@ -8,10 +8,6 @@ use IllumaLaw\VaultCipher\TenantEncryptionManager as Manager;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * Class TenantEncryptionManager
- *
- * Facade for the TenantEncryptionManager.
- *
  * @method static void forgetTenant(int|string $tenantId)
  * @method static \Illuminate\Encryption\Encrypter encrypterForTenant(int|string $tenantId)
  * @method static string encryptString(int|string $tenantId, string $value)

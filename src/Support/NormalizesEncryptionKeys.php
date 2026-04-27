@@ -4,13 +4,6 @@ declare(strict_types=1);
 
 namespace IllumaLaw\VaultCipher\Support;
 
-/**
- * Trait NormalizesEncryptionKeys
- *
- * Provides a helper method for taking a base64 encoded encryption key
- * (and optionally handling legacy serialized formatting) and decoding it
- * into a raw 32-byte string for use with the TenantKeyProvider contract.
- */
 trait NormalizesEncryptionKeys
 {
     protected function decodeBase64Key(string $key): string
@@ -22,7 +15,6 @@ trait NormalizesEncryptionKeys
             return $decodedCandidate;
         }
 
-        // Handle legacy serialized strings
         $unserialized = @unserialize($candidate, ['allowed_classes' => false]);
 
         if (! is_string($unserialized)) {

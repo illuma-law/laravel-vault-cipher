@@ -7,19 +7,11 @@ namespace IllumaLaw\VaultCipher\Support;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * Class TenantModelRotator
- *
- * Helps with rotating encryption keys on Eloquent models by providing
- * an abstract method for chunking through records and updating columns.
- */
 class TenantModelRotator
 {
     public function __construct(protected TenantKeyRotator $rotator) {}
 
     /**
-     * Rotate specific columns for a given query of models.
-     *
      * @param  Builder<Model>  $query
      * @param  list<string>  $columns
      */

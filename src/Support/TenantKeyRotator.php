@@ -12,12 +12,6 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use RuntimeException;
 
-/**
- * Class TenantKeyRotator
- *
- * Handles re-encryption of data when rotating tenant encryption keys.
- * Works with raw encrypter instances - no knowledge of tenant IDs or models.
- */
 final class TenantKeyRotator
 {
     public function __construct(
@@ -27,12 +21,6 @@ final class TenantKeyRotator
         private readonly FileEncrypter $newFileEncrypter,
     ) {}
 
-    /**
-     * Rotate a string ciphertext from old key to new key.
-     *
-     * If decryption fails (e.g., already re-encrypted or plaintext),
-     * returns the original value unchanged.
-     */
     public function rotateString(string $ciphertext): string
     {
         $plaintext = $this->decryptIfNeeded($ciphertext);
@@ -41,11 +29,6 @@ final class TenantKeyRotator
     }
 
     /**
-     * Rotate a file on disk from old key to new key.
-     *
-     * Detects chunk-encrypted vs string-encrypted files and handles accordingly.
-     * Atomically replaces the file content.
-     *
      * @throws RuntimeException if temp file operations fail
      */
     public function rotateFileOnDisk(Filesystem $disk, string $path): void
@@ -65,9 +48,6 @@ final class TenantKeyRotator
         $this->rotateStringEncryptedFile($disk, $path, $raw);
     }
 
-    /**
-     * Rotate a chunk-encrypted file using streaming.
-     */
     private function rotateChunkEncryptedFile(Filesystem $disk, string $path, string $raw): void
     {
         $encryptedPath = tempnam(sys_get_temp_dir(), 'rotate_old_enc_');
@@ -90,18 +70,12 @@ final class TenantKeyRotator
         }
     }
 
-    /**
-     * Rotate a string-encrypted file.
-     */
     private function rotateStringEncryptedFile(Filesystem $disk, string $path, string $raw): void
     {
         $plaintext = $this->decryptIfNeeded($raw);
         $disk->put($path, $this->newEncrypter->encryptString($plaintext));
     }
 
-    /**
-     * Attempt to decrypt, falling back to returning the original value on failure.
-     */
     private function decryptIfNeeded(string $value): string
     {
         try {

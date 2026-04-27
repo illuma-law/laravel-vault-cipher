@@ -11,10 +11,6 @@ use Illuminate\Database\Eloquent\Model;
 use RuntimeException;
 
 /**
- * Class TenantEncrypted
- *
- * Eloquent cast for tenant-aware string encryption.
- *
  * @implements CastsAttributes<mixed, mixed>
  */
 class TenantEncrypted implements CastsAttributes

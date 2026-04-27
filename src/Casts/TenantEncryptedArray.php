@@ -11,10 +11,6 @@ use Illuminate\Database\Eloquent\Model;
 use RuntimeException;
 
 /**
- * Class TenantEncryptedArray
- *
- * Eloquent cast for tenant-aware array encryption (stored as JSON).
- *
  * @implements CastsAttributes<mixed, mixed>
  */
 class TenantEncryptedArray implements CastsAttributes
